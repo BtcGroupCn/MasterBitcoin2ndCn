@@ -62,15 +62,21 @@ _++等宽斜体++_:: 显示需要由用户提供的或根据上下文环境修�
 This icon signifies a tip or suggestion. 
 =========
 
-[NOTE说明]
+[NOTE]
 =========
-This icon signifies a general note. 表示一般的说明
+This icon signifies a general note. 
 =========
 
-[WARNING警告]
+[WARNING]
 =========
-This icon indicates a warning or caution. 表示警告或提醒
+This icon indicates a warning or caution. 
 =========
+
+[提示] 表示提示或建议
+
+[说明] 表示一般的说明
+
+[警告] 表示警告或提醒
 
 === Code Examples
 
