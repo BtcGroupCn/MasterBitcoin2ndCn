@@ -70,7 +70,155 @@ When the git cloning operation has completed, you will have a complete local cop
 $ cd bitcoin
 ```
 
+### 3.2.1 选择一个Bitcoin Core版本
+By default, the local copy will be synchronized with the most recent code, which might be an unstable or beta version of bitcoin. Before compiling the code, select a specific version by checking out a release tag. This will synchronize the local copy with a specific snapshot of the code repository identified by a keyword tag. Tags are used by the developers to mark specific releases of the code by version number. First, to find the available tags, we use the git tag command:</br>
+默认情况下，下载的源代码是最新的代码，这可能是一个不稳定版本或Beta版本。 
+在编译代码之前，先获取一个release tag，来选择一个特定的版本。 
+这将使本地副本与keyword tag所标识的代码库的特定快照同步。 
+开发人员使用tag来用版本号标记代码特定release。 
+首先，要找到可用的tags，我们使用git tag命令：
 
+```html
+$ git tag
+v0.1.5
+v0.1.6test1
+v0.10.0
+...
+v0.11.2
+v0.11.2rc1
+v0.12.0rc1
+v0.12.0rc2
+...
+```
+
+The list of tags shows all the released versions of bitcoin. By convention, release candidates, which are intended for testing, have the suffix "rc." Stable releases that can be run on production systems have no suffix. From the preceding list, select the highest version release, which at the time of writing was v0.15.0. To synchronize the local code with this version, use the git checkout command:</br>
+tag列表显示所有的发布版本。
+根据惯例，用于测试的发布版本有后缀“rc”。
+可以在生产系统上运行的稳定版本没有后缀。 
+从上面的列表中，选择最高版本的版本，在本书写作时是v0.15.0。
+为了使本地代码与此版本同步，使用git checkout命令：
+
+```html
+$ git checkout v0.15.0
+HEAD is now at 3751912... Merge #11295: doc: Old fee_estimates.dat are discarded by 0.15.0
+```
+
+You can confirm you have the desired version "checked out" by issuing the command git status:</br>
+使用git status命令，可以确认你有了所需的版本。
+
+```html
+$ git status
+HEAD detached at v0.15.0
+nothing to commit, working directory clean
+```
+
+### 3.2.2 配置Bitcoin Core Build
+The source code includes documentation, which can be found in a number of files. Review the main documentation located in README.md in the bitcoin directory by typing **more README.md** at the prompt and using the spacebar to progress to the next page. In this chapter, we will build the command-line bitcoin client, also known as bitcoind on Linux. Review the instructions for compiling the bitcoind command-line client on your platform by typing **more doc/build-unix.md**. Alternative instructions for macOS and Windows can be found in the doc directory, as build-osx.md or build-windows.md, respectively.</br>
+源代码中包括文档，可以在多个文件中找到。
+主文档是bitcoin目录中的README.md。
+在本章中，我们将构建命令行比特币客户端，在Linux也称为bitcoind。
+查看编译bitcoind命令行客户端的说明，方法是输入：more doc/build-unix.md。
+可以在doc目录中找到macOS和Windows的构建说明，分别为build-osx.md或build-windows.md。
+
+Carefully review the build prerequisites, which are in the first part of the build documentation. These are libraries that must be present on your system before you can begin to compile bitcoin. If these prerequisites are missing, the build process will fail with an error. If this happens because you missed a prerequisite, you can install it and then resume the build process from where you left off. Assuming the prerequisites are installed, you start the build process by generating a set of build scripts using the autogen.sh script.</br>
+仔细查看构建的前提条件，这些前提在构建文档的第一部分。
+这些是在你开始编译比特币之前必须存在于系统上的库。
+如果缺少这些条件，构建过程会失败，并提示错误。
+如果失败是因为您缺失条件，可以安装它，然后恢复构建过程。
+假设要求的库都已经安装了，可以通过使用autogen.sh脚本生成一组构建脚本来启动构建过程。
+
+```html
+$ ./autogen.sh
+...
+glibtoolize: copying file 'build-aux/m4/libtool.m4'
+glibtoolize: copying file 'build-aux/m4/ltoptions.m4'
+glibtoolize: copying file 'build-aux/m4/ltsugar.m4'
+glibtoolize: copying file 'build-aux/m4/ltversion.m4'
+...
+configure.ac:10: installing 'build-aux/compile'
+configure.ac:5: installing 'build-aux/config.guess'
+configure.ac:5: installing 'build-aux/config.sub'
+configure.ac:9: installing 'build-aux/install-sh'
+configure.ac:9: installing 'build-aux/missing'
+Makefile.am: installing 'build-aux/depcomp'
+...
+```
+
+The autogen.sh script creates a set of automatic configuration scripts that will interrogate your system to discover the correct settings and ensure you have all the necessary libraries to compile the code. The most important of these is the configure script that offers a number of different options to customize the build process. Type "./configure --help" to see the various options:</br>
+autogen.sh脚本创建一组自动配置脚本，它会询问系统以发现正确的设置，并确保你有编译代码所需的所有库。
+其中最重要的是configure脚本，它提供了许多不同的选项来定制构建过程。
+输入“./configure --help”查看各种选项。
+
+```html
+$ ./configure --help
+`configure' configures Bitcoin Core 0.15.0 to adapt to many kinds of systems.
+
+Usage: ./configure [OPTION]... [VAR=VALUE]...
+
+...
+Optional Features:
+  --disable-option-checking  ignore unrecognized --enable/--with options
+  --disable-FEATURE       do not include FEATURE (same as --enable-FEATURE=no)
+  --enable-FEATURE[=ARG]  include FEATURE [ARG=yes]
+
+  --enable-wallet         enable wallet (default is yes)
+
+  --with-gui[=no|qt4|qt5|auto]
+...
+```
+
+The configure script allows you to enable or disable certain features of bitcoind through the use of the --enable-FEATURE and --disable-FEATURE flags, where FEATURE is replaced by the feature name, as listed in the help output. </br>
+configure脚本允许你使用--enable-FEATURE和--disable-FEATURE标志来启用或禁用bitcoind的某些功能，其中FEATURE由功能名称替换，就像help输出列出的那样。 
+
+In this chapter, we will build the bitcoind client with all the default features. We won’t be using the configuration flags, but you should review them to understand what optional features are part of the client. If you are in an academic setting, computer lab restrictions may require you to install applications in your home directory (e.g., using --prefix=$HOME).</br>
+在本章中，我们构建的bitcoind客户端有所有默认功能。 
+我们不使用配置标志，但你应该查看它们，以了解客户端提供了哪些可选功能。 
+如果你在学校环境，计算机实验室限制可能需要你在主目录中安装应用程序（例如，使用--prefix = $ HOME）。
+
+Here are some useful options that override the default behavior of the configure script:</br>
+以下是一些有用的选项，修改了configure脚本的默认行为：
+
+**--prefix=$HOME**
+This overrides the default installation location (which is /usr/local/) for the resulting executable. Use $HOME to put everything in your home directory, or a different path.</br>
+这将修改生成的可执行文件的默认安装位置，默认是 /usr/local/。 
+使用$HOME将所有内容放在主目录中。
+
+**--disable-wallet**
+This is used to disable the reference wallet implementation.</br>
+用于禁用参考钱包的实现。
+
+**--with-incompatible-bdb**
+If you are building a wallet, allow the use of an incompatible version of the Berkeley DB library.</br>
+如果你在构建一个钱包，这允许使用不兼容版本的Berkeley DB库。
+
+**--with-gui=no**
+Don't build the graphical user interface, which requires the Qt library. This builds server and command-line bitcoin only.</br>
+不构建GUI（GUI要要Qt库）。
+这只构建服务器和命令行。
+
+Next, run the configure script to automatically discover all the necessary libraries and create a customized build script for your system:</br>
+接下来，运行configure脚本来自动发现所有必需的库，并为你的系统创建一个定制的构建脚本。
+
+```html
+$ ./configure
+checking build system type... x86_64-unknown-linux-gnu
+checking host system type... x86_64-unknown-linux-gnu
+checking for a BSD-compatible install... /usr/bin/install -c
+checking whether build environment is sane... yes
+checking for a thread-safe mkdir -p... /bin/mkdir -p
+checking for gawk... gawk
+checking whether make sets $(MAKE)... yes
+...
+[many pages of configuration tests follow]
+...
+$
+```
+
+If all went well, the configure command will end by creating the customized build scripts that will allow us to compile bitcoind. If there are any missing libraries or errors, the configure command will terminate with an error instead of creating the build scripts. If an error occurs, it is most likely because of a missing or incompatible library. Review the build documentation again and make sure you install the missing prerequisites. Then run configure again and see if that fixes the error.</br>
+如果一切顺利，configure命令将会创建定制的构建脚本，可用于编译bitcoind。
+如果缺失库或有错误，configure命令将会以错误信息终止。
+如果出现了错误，可能是因为缺少库或是有不兼容的库。
+重新检查构建文档，确认你已经安装缺少的条件。然后运行configure，看看错误是否解决了。
 
 
 
