@@ -722,11 +722,82 @@ We can further explore the blockchain by examining the previous transaction refe
 我们可以进一步探索这个区块链，使用相同的命令（例如 gettransaction ）进一步查看前一个交易（使用它的txid）。
 这样，我们可以可以追溯一连串交易，比特币在所有者地址之间转移。
 
+### 3.3.3 查看区块
+Commands: getblock, getblockhash</br>
+命令： </br>
+-	getblock</br>
+-	getblockhash
+
+Exploring blocks is similar to exploring transactions. However, blocks can be referenced either by the block height or by the block hash. First, let’s find a block by its height. In [cup_of_coffee], we saw that Alice’s transaction was included in block 277316.
+查看区块类似于查看交易。但是，可以用区块高度或区块哈希引用区块。</br>
+我们先用区块区块查看区块。
+在买咖啡故事中，Alice的交易已包含在区块277316中。
+
+We use the getblockhash command, which takes the block height as the parameter and returns the block hash for that block:</br>
+我们使用getblockhash命令，提供的参数是区块高度，返回区块的哈希。
+
+```html
+$ bitcoin-cli getblockhash 277316
+0000000000000001b6b9a13b095e96db41c4a928b97ef2d944a9b31b2cc7bdc4
+```
+
+Now that we know which block Alice’s transaction was included in, we can query that block. We use the getblock command with the block hash as the parameter:</br>
+因为我们知道Alice的交易包含在哪个区块中，就可以查看那个区块。
+我们使用getblock命令，参数是这个区块的哈希。
+
+```html
+$ bitcoin-cli getblock 0000000000000001b6b9a13b095e96db41c4a928b97ef2d944a9b31b2cc7bdc4
+{
+  "hash": "0000000000000001b6b9a13b095e96db41c4a928b97ef2d944a9b31b2cc7bdc4",
+  "confirmations": 37371,
+  "size": 218629,
+  "height": 277316,
+  "version": 2,
+  "merkleroot": "c91c008c26e50763e9f548bb8b2fc323735f73577effbc55502c51eb4cc7cf2e",
+  "tx": [
+    "d5ada064c6417ca25c4308bd158c34b77e1c0eca2a73cda16c737e7424afba2f",
+    "b268b45c59b39d759614757718b9918caf0ba9d97c56f3b91956ff877c503fbe",
+    "04905ff987ddd4cfe603b03cfb7ca50ee81d89d1f8f5f265c38f763eea4a21fd",
+    "32467aab5d04f51940075055c2f20bbd1195727c961431bf0aff8443f9710f81",
+    "561c5216944e21fa29dd12aaa1a45e3397f9c0d888359cb05e1f79fe73da37bd",
+[... hundreds of transactions ...]
+    "78b300b2a1d2d9449b58db7bc71c3884d6e0579617e0da4991b9734cef7ab23a",
+    "6c87130ec283ab4c2c493b190c20de4b28ff3caf72d16ffa1ce3e96f2069aca9",
+    "6f423dbc3636ef193fd8898dfdf7621dcade1bbe509e963ffbff91f696d81a62",
+    "802ba8b2adabc5796a9471f25b02ae6aeee2439c679a5c33c4bbcee97e081196",
+    "eaaf6a048588d9ad4d1c092539bd571dd8af30635c152a3b0e8b611e67d1a1af",
+    "e67abc6bd5e2cac169821afc51b207127f42b92a841e976f9b752157879ba8bd",
+    "d38985a6a1bfd35037cb7776b2dc86797abbb7a06630f5d03df2785d50d5a2ac",
+    "45ea0a3f6016d2bb90ab92c34a7aac9767671a8a84b9bcce6c019e60197c134b",
+    "c098445d748ced5f178ef2ff96f2758cbec9eb32cb0fc65db313bcac1d3bc98f"
+  ],
+  "time": 1388185914,
+  "mediantime": 1388183675,
+  "nonce": 924591752,
+  "bits": "1903a30c",
+  "difficulty": 1180923195.258026,
+  "chainwork": "000000000000000000000000000000000000000000000934695e92aaf53afa1a",
+  "previousblockhash": "0000000000000002a7bbd25a417c0374cc55261021e8a9ca74442b01284f0569",
+  "nextblockhash": "000000000000000010236c269dd6ed714dd5db39d36b33959079d78dfd431ba7"
+}
+```
+
+The block contains 419 transactions and the 64th transaction listed (0627052b...) is Alice’s coffee payment. The height entry tells us this is the 277316th block in the blockchain.</br>
+这个区块包含419个交易，第64个交易（0627052b…）是Alice的交易。 
+height表示它是区块链中第277316个区块。
 
 
 
 ```html
+```
 ```html
+```
+```html
+```
+```html
+```
+
+
 
 
 
