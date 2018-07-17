@@ -25,22 +25,37 @@ Two years later, after creating a number of small startups to explore various bi
 
 Although ants form a caste-based society and have a queen for producing offspring, there is no central authority or leader in an ant colony. The highly intelligent and sophisticated behavior exhibited by a multimillion-member colony is an emergent property from the interaction of the individuals in a social network.
 
+虽然切叶蚁形成的是阶级社会，且依靠蚁后繁衍后代，但是在蚁群中不存在中央集权体制或领导人。通过切叶蚁我们可以看到，群落中数百万成员所展现的高度智能且复杂的行为是社会网络中的个体互动这一性质的凸显。
+
 Nature demonstrates that decentralized systems can be resilient and can produce emergent complexity and incredible sophistication without the need for a central authority, hierarchy, or complex parts.
+
+大自然向我们证明，去中心化体制具有弹性并能创造出意想不到的复杂性和难以想象的精妙，而不需要中央集权体制、等级制度或复杂的组织结构。
 
 ((("decentralized systems", "benefits of")))Bitcoin is a highly sophisticated decentralized trust network that can support myriad financial processes. Yet, each node in the bitcoin network follows a few simple mathematical rules. The interaction between many nodes is what leads to the emergence of the sophisticated behavior, not any inherent complexity or trust in any single node. Like an ant colony, the bitcoin network is a resilient network of simple nodes following simple rules that together can do amazing things without any central coordination.((("", startref="BCbasicbenefits0")))
 
-=== Conventions Used in This Book
+比特币网络正是这样一个高度复杂的去中心化的可信网络，能够支撑无数财务流程。然而，比特币网络的每一个节点都遵循着一些简单的数学准则。节点间的相互作用促成引起了组织的复杂行为，而并不是任何某个单一节点自身具有复杂性和可信性。就像蚁群一样，比特币的弹性网络是一个由众多遵循简单准则的简单节点所组成的弹性网络，这些简单的节点准则聚合在一起可以完成惊人的事情，而不需要任何中枢协调。
+
+=== Conventions Used in This Book 本书惯例
 
 ((("typographical conventions")))The following typographical conventions are used in this book:
 
+本书采用以下排版上的约定:
+
 _Italic_:: Indicates new terms, URLs, email addresses, filenames, and file extensions.
+
+_斜体_::指示新的术语、URL链接、email地址、文件名和文件扩展名
 
 +Constant width+:: Used for program listings, as well as within paragraphs to refer to program elements such as variable or function names, databases, data types, environment variables, statements, and keywords.
 
++等宽字++:: 用于程序清单的显示，也用于段落中涉及的程序要素，如变量或函数名、数据库、数据类型、环境变量、语句和关键字。
+
 **`Constant width bold`**:: Shows commands or other text that should be typed literally by the user.
+
+**`等宽粗体`**:: 显示需要由用户输入的命令和其他文字。
 
 _++Constant width italic++_:: Shows text that should be replaced with user-supplied values or by values determined by context.
 
+_++等宽斜体++_:: 显示需要由用户提供的或根据上下文环境修改的值。
 
 [TIP]
 ====
