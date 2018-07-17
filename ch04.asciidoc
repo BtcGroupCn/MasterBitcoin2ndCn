@@ -1,39 +1,92 @@
 [[ch04_keys_addresses]]
-== Keys, Addresses
+== 4 Keys, Addresses 密钥和地址
 
 ((("cryptography", "defined")))((("cryptography", see="also keys and addresses")))You may have heard that bitcoin is based on _cryptography_, which is a branch of mathematics used extensively in computer security. Cryptography means "secret writing" in Greek, but the science of cryptography encompasses more than just secret writing, which is referred to as encryption. Cryptography can also be used to prove knowledge of a secret without revealing that secret (digital signature), or prove the authenticity of data (digital fingerprint). These types of cryptographic proofs are the mathematical tools critical to bitcoin and used extensively in bitcoin applications. ((("encryption")))((("encryption", see="also keys and addresses")))Ironically, encryption is not an important part of bitcoin, as its communications and transaction data are not encrypted and do not need to be encrypted to protect the funds. In this chapter we will introduce some of the cryptography used in bitcoin to control ownership of funds, in the form of keys, addresses, and wallets.
 
-=== Introduction
+你可能听说过，比特币是基于密码学，密码学是在计算机安全中广泛使用的一个数学分支。 
+密码学在希腊语中的意思是“秘密书写”，但密码学不仅是秘密书写，还指加密。
+密码学也可以用于：证明了解一个秘密，而不用揭示这个秘密（数字签名）；或证明数据的不会泄露秘密（数字签名），或证明数据的真实性（数字指纹）。
+这些类型的密码学证明对比特币来说是关键的数学工具，并且在比特币应用中被广泛使用。
+然而，加密不是比特币的重要部分，比特币的通信和交易数据都没有被加密，也不需要加密来保护资金。
+在本章中，我们介绍一些在比特币中用于控制资金所有权的密码学，形式是密钥、地址和钱包。
+
+=== 4.1 Introduction 介绍
 
 ((("digital keys", see="keys and addresses")))((("keys and addresses", "overview of", id="KAover04")))((("digital signatures", "purpose of")))Ownership of bitcoin is established through _digital keys_, _bitcoin addresses_, and _digital signatures_. The digital keys are not actually stored in the network, but are instead created and stored by users in a file, or simple database, called a _wallet_. The digital keys in a user's wallet are completely independent of the bitcoin protocol and can be generated and managed by the user's wallet software without reference to the blockchain or access to the internet. Keys enable many of the interesting properties of bitcoin, including decentralized trust and control, ownership attestation, and the cryptographic-proof security model.
 
+比特币的所有权是通过下列建立的：数字密钥、比特币地址、数字签名。
+数字密钥并不存储在网络中，而是由用户生成和存储，存储在文件或简单数据库（钱包）中。
+用户钱包中的数字密钥完全独立于比特币协议，可由用户钱包软件生成和管理，而无需参考区块链或访问互联网。
+密钥实现了比特币的许多有趣特性，包括去中心化信任和控制、所有权证明、密码证明安全模型。
+
 Most bitcoin transactions require a valid digital signature to be included in the blockchain, which can only be generated with a secret key; therefore, anyone with a copy of that key has control of the bitcoin. ((("witnesses")))The digital signature used to spend funds is also referred to as a _witness_, a term used in cryptography. The witness data in a bitcoin transaction testifies to the true ownership of the funds being spent.
+
+大多数比特币交易都需要一个有效的数字签名才会被存储在区块链中，数字签名只能用私钥生成；
+因此，任何拥有私钥的人都可以控制那个比特币。
+用于花费资金的数字签名也被称为见证（witness），这是密码学中使用的一个术语。
+比特币交易中的见证数据证明了对花费的资金拥有所有权。
 
 ((("public and private keys", "key pairs")))((("public and private keys", see="also keys and addresses")))Keys come in pairs consisting of a private (secret) key and a public key. Think of the public key as similar to a bank account number and the private key as similar to the secret PIN, or signature on a check, that provides control over the account. These digital keys are very rarely seen by the users of bitcoin. For the most part, they are stored inside the wallet file and managed by the bitcoin wallet software.
 
+密钥是成对出现的，一个私钥，一个公钥。
+公钥就像银行的账户，私钥就像支票上的签名，它提供对账户的控制。。
+比特币的用户很少直接看到这些数字密钥。
+多数情况下，比特币钱包软件把它们存储在钱包文件中，并管理它们。
+
 In the payment portion of a bitcoin transaction, the recipient's public key is represented by its digital fingerprint, called a _bitcoin address_, which is used in the same way as the beneficiary name on a check (i.e., "Pay to the order of"). In most cases, a bitcoin address is generated from and corresponds to a public key. However, not all bitcoin addresses represent public keys; they can also represent other beneficiaries such as scripts, as we will see later in this chapter. This way, bitcoin addresses abstract the recipient of funds, making transaction destinations flexible, similar to paper checks: a single payment instrument that can be used to pay into people's accounts, pay into company accounts, pay for bills, or pay to cash. The bitcoin address is the only representation of the keys that users will routinely see, because this is the part they need to share with the world.
+
+在比特币交易的支付环节，收款人的公钥是用它的数字指纹来表示的，称为“比特币地址”，就像支票上的收款人姓名。
+多数情况下，比特币地址由一个公钥生成，并与其对应。
+然而，并非所有比特币地址都代表公钥，它们也可以代表其他支付对象，例如脚本，将在本章后面看到。
+这样一来，比特币地址就是资金接收者的抽象，使得交易的目的地更加灵活，就像支票一样：可以支付给个人账户、公司账户、支付单支、支付现金。
+比特币地址是用户经常看到的密钥的唯一表示，因为他们需要把这部分告诉其他人。
 
 First, we will introduce cryptography and explain the mathematics used in bitcoin. Next, we will look at how keys are generated, stored, and managed.  We will review the various encoding formats used to represent private and public keys, addresses, and script addresses. Finally, we will look at advanced use of keys and addresses: vanity, multisignature, and script addresses and paper wallets.
 
-==== Public Key Cryptography and Cryptocurrency
+首先，我们将介绍密码学，并解释在比特币中使用的数学知识。
+然后，了解密钥如何被产生、存储和管理。
+我们将了解各种编码格式，用于表示私钥和公钥、地址、脚本地址。
+最后，介绍密钥和地址的高级用途：比特币靓号、多签名、脚本地址、纸钱包。
+
+==== 4.1.1 Public Key Cryptography and Cryptocurrency 公钥密码学和加密货币
 
 ((("keys and addresses", "overview of", "public key cryptography")))((("digital currencies", "cryptocurrency")))Public key cryptography was invented in the 1970s and is a mathematical foundation for computer and information security.
 
+公钥密码学发明于1970年代，它是计算机和信息安全的一个数学基础。
+
 Since the invention of public key cryptography, several suitable mathematical functions, such as prime number exponentiation and elliptic curve multiplication, have been discovered. These mathematical functions are practically irreversible, meaning that they are easy to calculate in one direction and infeasible to calculate in the opposite direction. Based on these mathematical functions, cryptography enables the creation of digital secrets and unforgeable digital signatures. Bitcoin uses elliptic curve multiplication as the basis for its cryptography.
+
+自从发明了公钥密码学之后，已经发现了一些合适的数学函数，例如：素数求幂和椭圆曲线乘法。
+这些数学函数都是不可逆的，就是说，很容易在一个方向上计算，但无法在反方向上计算。
+基于这些数学函数，密码学能够创建数字秘密和不可伪造的数字签名。
+比特币使用椭圆曲线乘法作为其密码学的基础。
 
 In bitcoin, we use public key cryptography to create a key pair that controls access to bitcoin. The key pair consists of a private key and--derived from it--a unique public key. The public key is used to receive funds, and the private key is used to sign transactions to spend the funds.
 
+在比特币中，我们用公钥密码学创建一个密钥对，用于控制比特币。
+密钥对包括一个私钥和一个公钥（用私钥生成）。
+公钥用于接收资金，私钥用于对交易进行签名，以花费资金。
+
 There is a mathematical relationship between the public and the private key that allows the private key to be used to generate signatures on messages. This signature can be validated against the public key without revealing the private key.
 
+公钥和私钥之间有一个数学关系，使得可以使用私钥对消息生成签名。
+可以用公钥验证这个签名，而不需要泄露私钥。
+
 When spending bitcoin, the current bitcoin owner presents her public key and a signature (different each time, but created from the same private key) in a transaction to spend those bitcoin. Through the presentation of the public key and signature, everyone in the bitcoin network can verify and accept the transaction as valid, confirming that the person transferring the bitcoin owned them at the time of the transfer.
+
+当花费比特币时，比特币的当前所有者需要在交易中提供他的公钥和签名（签名每次都不同，但都是用同一私钥生成的）。
+通过提交公钥和签名，比特币网络中的所有人都可以验证和承认这个交易是有效的，确认转钱的这个人对比特币有所有权。
 
 [TIP]
 ====
 ((("keys and addresses", "overview of", "key pairs")))In most wallet implementations, the private and public keys are stored together as a _key pair_ for convenience. However, the public key can be calculated from the private key, so storing only the private key is also possible.
 ====
 
+提示：在大多数钱包中，为了方便，是把私钥和公钥作为一个密钥对来存储的。
+但是，可以用私钥计算得到公钥，所以也可以只存储私钥。
+
 [[private_public_keys]]
-==== Private and Public Keys
+==== 4.1.2 Private and Public Keys 私钥和公钥
 
 ((("keys and addresses", "overview of", "private and public key pairs")))((("elliptic curve cryptography")))((("cryptography", "elliptic curve cryptography")))A bitcoin wallet contains a collection of key pairs, each consisting of a private key and a public key. The private key (k) is a number, usually picked at random. From the private key, we use elliptic curve multiplication, a one-way cryptographic function, to generate a public key (K). From the public key (K), we use a one-way cryptographic hash function to generate a bitcoin address (A). In this section, we will start with generating the private key, look at the elliptic curve math that is used to turn that into a public key, and finally, generate a bitcoin address from the public key. The relationship between private key, public key, and bitcoin address is shown in <<k_to_K_to_A>>.
 
