@@ -43,11 +43,11 @@ Nature demonstrates that decentralized systems can be resilient and can produce 
 
 _Italic_:: Indicates new terms, URLs, email addresses, filenames, and file extensions.
 
-_斜体_::指示新的术语、URL链接、email地址、文件名和文件扩展名
+_斜体_:: 指示新的术语、URL链接、email地址、文件名和文件扩展名
 
 +Constant width+:: Used for program listings, as well as within paragraphs to refer to program elements such as variable or function names, databases, data types, environment variables, statements, and keywords.
 
-+等宽字++:: 用于程序清单的显示，也用于段落中涉及的程序要素，如变量或函数名、数据库、数据类型、环境变量、语句和关键字。
++等宽字+:: 用于程序清单的显示，也用于段落中涉及的程序要素，如变量或函数名、数据库、数据类型、环境变量、语句和关键字。
 
 **`Constant width bold`**:: Shows commands or other text that should be typed literally by the user.
 
