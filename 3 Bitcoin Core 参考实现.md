@@ -895,31 +895,34 @@ Our example code calculates that the total value transacted in this block is 10,
 有些区块浏览器报告的总额不包括奖励和交易费。
 看看你是否能发现差异。
 
+## 3.4 其它客户端、库、工具包
+There are many alternative clients, libraries, toolkits, and even full-node implementations in the bitcoin ecosystem. These are implemented in a variety of programming languages, offering programmers native interfaces in their preferred language.</br>
+在比特币生态系统中，有许多其它的客户端、库、工具包，甚至全节点实现。
+这些是用各种编程语言实现的，提供了编程语言原生接口。
 
+The following sections list some of the best libraries, clients, and toolkits, organized by programming languages.</br>
+以下列出了一些最好的库、客户端和工具包。
 
+Many more libraries exist in a variety of other programming languages and more are created all the time.</br>
+还有很多库在用各种其它编程语言中。
 
-
-```html
-```
-```html
-```
-```html
-```
-```html
-```
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+| 编程语言        | 工具   |  说明  |
+| --------   | -----  | ----  |
+| C/C++      |Bitcoin Core    | The reference implementation of bitcoin       |
+| C/C++      |libbitcoin	    |Cross-platform C++ development toolkit, node, and consensus library        |
+| C/C++      |bitcoin explorer    | Libbitcoin’s command-line tool       |
+| C/C++      |picocoin   |A C language lightweight client library for bitcoin by Jeff Garzik        |
+| JavaScript |bcoin   | A modular and scalable full-node implementation with API       |
+| JavaScript |Bitcore    | Full node, API, and library by Bitpay       |
+| JavaScript |BitcoinJS    |A pure JavaScript Bitcoin library for node.js and browsers        |
+| Java       |bitcoinj    | A Java full-node client library       |
+| Java       |Bits of Proof (BOP)    | A Java enterprise-class implementation of bitcoin       |
+| Python     |python-bitcoinlib   |A Python bitcoin library, consensus library, and node by Peter Todd        |
+| Python     |pycoin   | A Python bitcoin library by Richard Kiss       |
+| Python     |pybitcointools   |A Python bitcoin library by Vitalik Buterin        |
+| Ruby       |bitcoin-client    | A Ruby library wrapper for the JSON-RPC API       |
+| Go         |btcd     |A Go language full-node bitcoin client        |
+| Rust       |rust-bitcoin    |Rust bitcoin library for serialization, parsing, and API calls        |
+| C#         |NBitcoin    |Comprehensive bitcoin library for the .NET framework        |
+| Objective-C|CoreBitcoin    | Bitcoin toolkit for ObjC and Swift       |
 
