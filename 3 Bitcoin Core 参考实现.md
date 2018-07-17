@@ -630,7 +630,7 @@ Commands: getrawtransaction, decoderawtransaction</br>
 -	decodeawtransaction
 
 In [cup_of_coffee], Alice bought a cup of coffee from Bob’s Cafe. Her transaction was recorded on the blockchain with transaction ID (txid) 0627052b6f28912f2703066a912ea577f2ce4da4caa5a5fbd8a57286c345c2f2. Let’s use the API to retrieve and examine that transaction by passing the transaction ID as a parameter:</br>
-Alice在Bob的咖啡店买了一杯咖啡，她的交易记录在区块链中，交易ID（txid）是：0627052b6f28912f2703066a912ea577f2ce4da4caa5a5fbd8a57286c345c2f2 
+Alice在Bob的咖啡店买了一杯咖啡，她的交易记录在区块链中，交易ID（txid）是：0627052b6f28912f2703066a912ea577f2ce4da4caa5a5fbd8a57286c345c2f2 </br>
 我们使用这个API来查看这个交易，提供的参数是这个交易ID。
 
 ```html
