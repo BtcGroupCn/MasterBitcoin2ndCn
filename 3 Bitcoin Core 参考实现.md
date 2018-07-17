@@ -220,5 +220,61 @@ If all went well, the configure command will end by creating the customized buil
 如果出现了错误，可能是因为缺少库或是有不兼容的库。
 重新检查构建文档，确认你已经安装缺少的条件。然后运行configure，看看错误是否解决了。
 
+### 3.2.3 构建Bitcoin Core可执行程序
+Next, you will compile the source code, a process that can take up to an hour to complete, depending on the speed of your CPU and available memory. During the compilation process you should see output every few seconds or every few minutes, or an error if something goes wrong. If an error occurs, or the compilation process is interrupted, it can be resumed any time by typing make again. Type "make" to start compiling the executable application:</br>
+下一步，你将编译源代码，这个过程一般可能需要1个小时完成。
+在编译的过程中，你应该经常看一下输出结果。如果出现了问题，会显示错误。
+如果发生了错误，编译过程会中断，可以输入make来恢复执行。
+输入make，开始编译这个可执行应用程序。
+
+```html
+$ make
+Making all in src
+  CXX      crypto/libbitcoinconsensus_la-hmac_sha512.lo
+  CXX      crypto/libbitcoinconsensus_la-ripemd160.lo
+  CXX      crypto/libbitcoinconsensus_la-sha1.lo
+  CXX      crypto/libbitcoinconsensus_la-sha256.lo
+  CXX      crypto/libbitcoinconsensus_la-sha512.lo
+  CXX      libbitcoinconsensus_la-hash.lo
+  CXX      primitives/libbitcoinconsensus_la-transaction.lo
+  CXX      libbitcoinconsensus_la-pubkey.lo
+  CXX      script/libbitcoinconsensus_la-bitcoinconsensus.lo
+  CXX      script/libbitcoinconsensus_la-interpreter.lo
+
+[... many more compilation messages follow ...]
+
+$
+```
+
+On a fast system with more than one CPU, you might want to set the number of parallel compile jobs. For instance, make -j 2 will use two cores if they are available. If all goes well, Bitcoin Core is now compiled. You should run the unit test suite with make check to ensure the linked libraries are not broken in obvious ways. The final step is to install the various executables on your system using the make install command. You may be prompted for your user password, because this step requires administrative privileges:</br>
+如果系统由多个CPU，可以并行编译。例如使用 make –j2。
+如果一切顺利，Bitcoin Core现在已经编译完成。
+你应该使用make check来运行单元测试包，以保证链接库没有被破坏。
+最后一步是使用make install命令安装各种可执行程序。
+可能会提示你输入用户密码，因为这一步需要管理员权限。
+
+```html
+$ make check && sudo make install
+Password:
+Making install in src
+ ../build-aux/install-sh -c -d '/usr/local/lib'
+libtool: install: /usr/bin/install -c bitcoind /usr/local/bin/bitcoind
+libtool: install: /usr/bin/install -c bitcoin-cli /usr/local/bin/bitcoin-cli
+libtool: install: /usr/bin/install -c bitcoin-tx /usr/local/bin/bitcoin-tx
+...
+$
+```
+
+The default installation of bitcoind puts it in /usr/local/bin. You can confirm that Bitcoin Core is correctly installed by asking the system for the path of the executables, as follows:</br>
+bitcoind 默认的安装位置是/usr/local/bin。
+你可以通过询问系统中可执行文件的路径，来确认bitcoin是否安装成功。
+
+```html
+$ which bitcoind
+/usr/local/bin/bitcoind
+
+$ which bitcoin-cli
+/usr/local/bin/bitcoin-cli
+```
 
 
