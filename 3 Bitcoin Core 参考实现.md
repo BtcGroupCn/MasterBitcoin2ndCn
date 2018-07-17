@@ -786,6 +786,117 @@ The block contains 419 transactions and the 64th transaction listed (0627052b...
 这个区块包含419个交易，第64个交易（0627052b…）是Alice的交易。 
 height表示它是区块链中第277316个区块。
 
+### 3.3.4 使用Bitcoin Core的编程接口
+The bitcoin-cli helper is very useful for exploring the Bitcoin Core API and testing functions. But the whole point of an application programming interface is to access functions programmatically. In this section we will demonstrate accessing Bitcoin Core from another program.</br>
+bitcoin-cli helper对于查看Bitcoin Core API和测试功能非常有用。 
+但是，API的重点是以编程方式访问它的功能。
+在本节中，我们将演示用一个程序来访问Bitcoin Core。
+
+Bitcoin Core’s API is a JSON-RPC interface. JSON stands for JavaScript Object Notation and it is a very convenient way to present data that both humans and programs can easily read. RPC stands for Remote Procedure Call, which means that we are calling procedures (functions) that are remote (on the Bitcoin Core node) via a network protocol. In this case, the network protocol is HTTP, or HTTPS (for encrypted connections).</br>
+Bitcoin Core的API是一个JSON-RPC接口。 
+JSON是一种非常方便的方式来呈现人和程序都可以轻松读取的数据。 
+RPC意味着，我们通过网络协议调用远端（在Bitcoin Core节点上）的过程（函数）。 
+在本例中，网络协议是HTTP或HTTPS（用于加密连接）。
+
+When we used the bitcoin-cli command to get help on a command, it showed us an example of using curl, the versatile command-line HTTP client to construct one of these JSON-RPC calls:</br>
+当我们使用bitcoin-cli命令获取命令的帮助时，它给了我们一个例子curl，它是一个通用的命令行HTTP客户端，可用来构造JSON-RPC调用。
+
+```html
+$ curl --user myusername --data-binary '{"jsonrpc": "1.0", "id":"curltest", "method": "getblockchaininfo", "params": [] }' -H 'content-type: text/plain;' http://127.0.0.1:8332/
+```
+
+This command shows that curl submits an HTTP request to the local host (127.0.0.1), connecting to the default bitcoin port (8332), and submitting a jsonrpc request for the getblockchaininfo method using text/plain encoding.</br>
+这个命令的意思是：curl向本地主机（127.0.0.1）提交了一个HTTP请求，使用的端口是8332（默认的比特币端口），并使用text/plain编码提交了一个jsonrpc请求，请求的是getblockchaininfo 方法。
+
+You might notice that curl will ask for credentials to be sent along with the request. Bitcoin Core will create a random password on each start and place it in the data directory under the name .cookie. The bitcoin-cli helper can read this password file given the data directory. Similarly, you can copy the password and pass it to curl (or any higher level Bitcoin Core RPC wrappers). Alternatively, you can create a static password with the helper script provided in ./share/rpcuser/rpcuser.py in Bitcoin Core’s source directory.</br>
+你可能注意到，curl要求发送请求时要有凭证。
+Bitcoin Core在每个启动时会创建一个随机密码，放在数据目录的.cookie文件中。
+bitcoin-cli helper可以从数据目录读取这个密码文件。
+类似的，你可以拷贝这个密码，传给cure（或任何高级的Bitcoin Core RPC warppers）。
+你还可以用helper脚本创建一个静态密码，这个脚本在Bitcoin Core源目录的./share/rpcuser/rpcuser.py
+
+If you’re implementing a JSON-RPC call in your own program, you can use a generic HTTP library to construct the call, similar to what is shown in the preceding curl example.</br>
+如果你要在自己的程序中实现JSON-RPC调用，可以使用一个通用的HTTP库构建这个调用，类似于前面的curl示例中所示的。
+
+However, there are libraries in most every programming language that "wrap" the Bitcoin Core API in a way that makes this a lot simpler. We will use the python-bitcoinlib library to simplify API access. Remember, this requires you to have a running Bitcoin Core instance, which will be used to make JSON-RPC calls.</br>
+但是，大多数编程语言中都有库封装了Bitcoin Core API，使调用更加简单。
+我们将使用python-bitcoinlib库来简化API访问。
+记住，这需要你运行一个Bitcoin Core实例，用于进行JSON-RPC调用。
+
+The Python script in Running getblockchaininfo via Bitcoin Core’s JSON-RPC API makes a simple getblockchaininfo call and prints the block parameter from the data returned by Bitcoin Core.</br>
+下面例子的Python脚本做了一个简单的getblockchaininfo调用，输出的区块参数来自Bitcoin Core返回的数据。
+
+Example 3. Running getblockchaininfo via Bitcoin Core’s JSON-RPC API</br>
+例3：通过Bitcoin Core的JSON-RPC API运行getblockchaininfo
+
+```html
+link:code/rpc_example.py[]
+```
+
+Running it gives us the following result:</br>
+运行结果如下。
+
+```html
+$ python rpc_example.py
+394075
+```
+
+It tells us that our local Bitcoin Core node has 394075 blocks in its blockchain. Not a spectacular result, but it demonstrates the basic use of the library as a simplified interface to Bitcoin Core’s JSON-RPC API.</br>
+它告诉我们，Bitcoin Core节点在其区块链中有394075个区块。 
+它演示了使用库作为Bitcoin Core的JSON-RPC API的简化接口的基本使用。
+
+Next, let’s use the getrawtransaction and decodetransaction calls to retrieve the details of Alice’s coffee payment. In Retrieving a transaction and iterating its outputs, we retrieve Alice’s transaction and list the transaction’s outputs. For each output, we show the recipient address and value. As a reminder, Alice’s transaction had one output paying Bob’s Cafe and one output for change back to Alice.</br>
+接下来，我们使用getrawtransaction和decodetransaction调用来查看Alice的交易信息。 
+在下面的例子中，我们查看Alice的交易，并列出交易的输出。
+对于每个输出，显示了收款人的地址和金额。
+
+Example 4. Retrieving a transaction and iterating its outputs</br>
+例4：检索一个交易，并列出它的输出
+
+```html
+link:code/rpc_transaction.py[]
+```
+
+Running this code, we get:
+运行结果如下。
+
+```html
+$ python rpc_transaction.py
+([u'1GdK9UzpHBzqzX2A9JFP3Di4weBwqgmoQA'], Decimal('0.01500000'))
+([u'1Cdid9KFAaatwczBwBttQcwXYCpvK8h7FK'], Decimal('0.08450000'))
+```
+
+Both of the preceding examples are rather simple. You don’t really need a program to run them; you could just as easily use the bitcoin-cli helper. The next example, however, requires several hundred RPC calls and more clearly demonstrates the use of a programmatic interface.</br>
+上述两个例子都比较简单，你可以很容易地使用bitcoin-cli helper来实现。
+但是，下一个例子需要数百个RPC调用，并更清楚地说明了API的使用。
+
+In Retrieving a block and adding all the transaction outputs, we first retrieve block 277316, then retrieve each of the 419 transactions within by reference to each transaction ID. Next, we iterate through each of the transaction’s outputs and add up the value.</br>
+在下例中，我们首先检索区块277316，然后通过引用每个交易ID来检索区块中的419个交易。
+然后，我们将每个交易的输出都加起来。
+
+Example 5. Retrieving a block and adding all the transaction outputs</br>
+例5：检索一个区块，把所有交易的输出相加
+
+```html
+link:code/rpc_block.py[]
+```
+
+Running this code, we get:</br>
+运行结果如下。
+
+```html
+$ python rpc_block.py
+('Total value in block: ', Decimal('10322.07722534'))
+```
+
+Our example code calculates that the total value transacted in this block is 10,322.07722534 BTC (including 25 BTC reward and 0.0909 BTC in fees). Compare that to the amount reported by a block explorer site by searching for the block hash or height. Some block explorers report the total value excluding the reward and excluding the fees. See if you can spot the difference.</br>
+我们的例子代码计算出，这个区块中交易的总价值为10,322.07722534 BTC（包括25 BTC奖励和0.0909 BTC交易费）。
+可以与区块浏览器站点报告的金额进行比较，方法是搜索这个区块哈希和高度。
+有些区块浏览器报告的总额不包括奖励和交易费。
+看看你是否能发现差异。
+
+
+
 
 
 ```html
