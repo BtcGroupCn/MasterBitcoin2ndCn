@@ -521,6 +521,69 @@ Once you are happy with the configuration options you have selected, you should 
 一旦你对所选择的配置选项感到满意，应该将bitcoin添加到操作系统中的启动脚本中，以使其连续运行，并在操作系统重新启动时自动启动。
 contrib/init下的bitcoin的源目录中有各种操作系统的启动脚本例子，README.md文件说明了哪个系统使用哪个脚本。
 
+## 3.3 BitCoin Core API
+The Bitcoin Core client implements a JSON-RPC interface that can also be accessed using the command-line helper bitcoin-cli. The command line allows us to experiment interactively with the capabilities that are also available programmatically via the API. To start, invoke the help command to see a list of the available bitcoin RPC commands:</br>
+Bitcoin Core客户端实现了一个JSON-RPC接口，还可以使用命令行程序bitcoin-cli访问它。
+这个命令行可以用交互式能力进行实验，也能通过API进行编程。
+开始前，使用help看看可用的bitcoin RPC命令列表。
+
+```html
+$ bitcoin-cli help
+addmultisigaddress nrequired ["key",...] ( "account" )
+addnode "node" "add|remove|onetry"
+backupwallet "destination"
+createmultisig nrequired ["key",...]
+createrawtransaction [{"txid":"id","vout":n},...] {"address":amount,...}
+decoderawtransaction "hexstring"
+...
+...
+verifymessage "bitcoinaddress" "signature" "message"
+walletlock
+walletpassphrase "passphrase" timeout
+walletpassphrasechange "oldpassphrase" "newpassphrase"
+```
+
+Each of these commands may take a number of parameters. To get additional help, a detailed description, and information on the parameters, add the command name after help. For example, to see help on the getblockhash RPC command:</br>
+每个命令可能都需要一些参数。 
+要获得更多帮助、详细说明和参数信息，请在help后加上命令名称。 
+例如，要查看getblockhash RPC命令的帮助。
+
+```html
+$ bitcoin-cli help getblockhash
+getblockhash height
+
+Returns hash of block in best-block-chain at height provided.
+
+Arguments:
+1. height         (numeric, required) The height index
+
+Result:
+"hash"         (string) The block hash
+
+Examples:
+> bitcoin-cli getblockhash 1000
+> curl --user myusername --data-binary '{"jsonrpc": "1.0", "id":"curltest", "method": "getblockhash", "params": [1000] }' -H 'content-type: text/plain;' http://127.0.0.1:8332/
+```
+
+At the end of the help information you will see two examples of the RPC command, using the bitcoin-cli helper or the HTTP client curl. These examples demonstrate how you might call the command. Copy the first example and see the result:</br>
+在帮助信息的最后，有这个RPC命令的两个例子，它们分别使用bitcoin-cli helper和HTTP客户端curl。 这些例子说明了如何调用这个命令。下面是使用第一个例子的结果。
+
+```html
+$ bitcoin-cli getblockhash 1000
+00000000c937983704a73af28acdec37b049d214adbda81d7e2a3dd146f6ed09
+```
+
+The result is a block hash, which is described in more detail in the following chapters. But for now, this command should return the same result on your system, demonstrating that your Bitcoin Core node is running, is accepting commands, and has information about block 1000 to return to you.</br>
+结果是一个区块哈希，下面的章节中有更详细的描述。 
+但是现在，该命令应该在你的系统上返回相同的结果，表示你的Bitcoin Core节点正在运行，能够接受命令，并且有关于区块1000的信息返回给你。
+
+In the next sections we will demonstrate some very useful RPC commands and their expected output.</br>
+在下一节，我们要说明一些非常有用的RPC命令及其预期输出。
+
+
+
+
+
 
 
 
