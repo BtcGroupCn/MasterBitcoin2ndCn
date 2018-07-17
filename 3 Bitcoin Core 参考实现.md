@@ -309,6 +309,7 @@ Why would you want to run a node? Here are some of the most common reasons:</br>
 -	If you are building applications that must validate transactions according to bitcoin’s consensus rules. Typically, bitcoin software companies run several nodes.</br>
 -	If you want to support bitcoin. Running a node makes the network more robust and able to serve more wallets, more users, and more transactions.</br>
 -	If you do not want to rely on any third party to process or validate your transactions.</br>
+
 为什么要运行一个节点？
 以下是一些最常见的原因：</br>
 -	你在开发比特币软件，并且需要依赖比特币节点来编程（API）访问网络和区块链。</br>
@@ -318,4 +319,212 @@ Why would you want to run a node? Here are some of the most common reasons:</br>
 
 If you’re reading this book and interested in developing bitcoin software, you should be running your own node.</br>
 如果你正在阅读本书，并对开发比特币软件感兴趣，那么你应该运行自己的节点。
+
+### 3.2.5 配置Bitcoin Core节点
+Bitcoin Core will look for a configuration file in its data directory on every start. In this section we will examine the various configuration options and set up a configuration file. To locate the configuration file, run bitcoind -printtoconsole in your terminal and look for the first couple of lines.</br>
+当第一次运行时，Bitcoin Core会寻找一个配置文件。
+在本节中，我们看看各种配置选项，并建立一个配置文件。
+为了定位这个配置文件，运行下面命令，在前面几行中找。
+
+```html
+$ bitcoind -printtoconsole
+Bitcoin version v0.15.0
+Using the 'standard' SHA256 implementation
+Using data directory /home/ubuntu/.bitcoin/
+Using config file /home/ubuntu/.bitcoin/bitcoin.conf
+...
+[a lot more debug output]
+...
+```
+
+You can hit Ctrl-C to shut down the node once you determine the location of the config file. Usually the configuration file is inside the .bitcoin data directory under your user’s home directory. Open the configuration file in your preferred editor.</br>
+一旦你找到了配置文件的位置，可以按Ctrl-C来关闭这个节点。
+通常，配置文件是在你的home目录的.bitcoin数据目录中。
+用编辑器打开这个配置文件。
+
+Bitcoin Core offers more than 100 configuration options that modify the behavior of the network node, the storage of the blockchain, and many other aspects of its operation. To see a listing of these options, run bitcoind --help:</br>
+BitCoin Core提供了100个配置选项，它们可以修改网络节点的行为、区块链的存储、以及操作的许多其它方面。为了查看这些选项列表，运行下面命令。
+
+```html
+$ bitcoind --help
+Bitcoin Core Daemon version v0.15.0
+
+Usage:
+  bitcoind [options]                     Start Bitcoin Core Daemon
+
+Options:
+
+  -?
+       Print this help message and exit
+
+  -version
+       Print version and exit
+
+  -alertnotify=<cmd>
+       Execute command when a relevant alert is received or we see a really
+       long fork (%s in cmd is replaced by message)
+...
+[many more options]
+...
+
+  -rpcthreads=<n>
+       Set the number of threads to service RPC calls (default: 4)
+```
+
+Here are some of the most important options that you can set in the configuration file, or as command-line parameters to bitcoind:</br>
+下面是你可以在配置文件中设置的一些最重要的选项，或者作为bitcoind命令行参数：
+
+**alertnotify**</br>
+Run a specified command or script to send emergency alerts to the owner of this node, usually by email.</br>
+运行一个指定的命令或脚本，给节点所有者发送一个紧急警报，通常用email。
+
+**conf**</br>
+An alternative location for the configuration file. This only makes sense as a command-line parameter to bitcoind, as it can’t be inside the configuration file it refers to.</br>
+配置文件的另一个位置。这只是作为bitcoind的命令行参数有意义，不能在配置文件中。
+
+**datadir**</br>
+Select the directory and filesystem in which to put all the blockchain data. By default this is the .bitcoin subdirectory of your home directory. Make sure this filesystem has several gigabytes of free space.</br>
+选择要放置所有区块链数据的目录和文件系统。默认情况下，是.bitcoin子目录。确保这个文件系统具足够的可用空间。
+
+**prune**</br>
+Reduce the disk space requirements to this many megabytes, by deleting old blocks. Use this on a resource-constrained node that can’t fit the full blockchain.</br>
+通过删除旧的区块，将磁盘空间要求降低到指定大小。在资源受限的节点上使用这个，它不能放置完整的区块链。
+
+**txindex**</br>
+Maintain an index of all transactions. This means a complete copy of the blockchain that allows you to programmatically retrieve any transaction by ID.</br>
+维护所有交易的一个索引。这意味着一个完整的区块链，你可以通过编程获取任何交易。
+
+**dbcache**</br>
+The size of the UTXO cache. The default is 300 MiB. Increase this on high-end hardware and reduce the size on low-end hardware to save memory at the expense of slow disk IO.</br>
+UTXO缓存的大小。缺省是300MiB。
+
+**maxconnections**</br>
+Set the maximum number of nodes from which to accept connections. Reducing this from the default will reduce your bandwidth consumption. Use if you have a data cap or pay by the gigabyte.</br>
+设置接受连接的最大数量。 从默认值减少该值将减少你的带宽消耗。如果你的网络是按照流量计费，可以使用它。
+
+**maxmempool**</br>
+Limit the transaction memory pool to this many megabytes. Use it to reduce memory use on memory-constrained nodes.</br>
+将交易内存池限制在这个大小。
+
+**maxreceivebuffer/maxsendbuffer**</br>
+Limit per-connection memory buffer to this many multiples of 1000 bytes. Use on memory-constrained nodes.</br>
+将每个连接的内存缓冲区限制为指定大小。 在内存受限节点上使用。
+
+**minrelaytxfee**</br>
+Set the minimum fee rate for transaction you will relay. Below this value, the transaction is treated nonstandard, rejected from the transaction pool and not relayed.</br>
+设置你会传播的交易的最低交易费。低于此值，交易被视为非标准，会被交易池拒绝，并且不传播。
+
+**Transaction Database Index and txindex Option**</br>
+**交易数据库索引和txindex选项**
+
+By default, Bitcoin Core builds a database containing only the transactions related to the user’s wallet. If you want to be able to access any transaction with commands like getrawtransaction (see Exploring and Decoding Transactions), you need to configure Bitcoin Core to build a complete transaction index, which can be achieved with the txindex option. Set txindex=1 in the Bitcoin Core configuration file. If you don’t set this option at first and later set it to full indexing, you need to restart bitcoind with the -reindex option and wait for it to rebuild the index.</br>
+默认情况下，Bitcoin Core构建一个数据库，仅包含与用户钱包有关的交易。
+如果你想要使用诸如getrawtransaction之类的命令访问任何交易，则需要配置Bitcoin Core以构建完整的交易索引，这可以通过txindex选项来实现。
+在Bitcoin Core配置文件中设置txindex = 1。 
+如果不想一开始设置此选项，以后再设置为完全索引，则需要使用-reindex选项重新启动bitcoind，并等待它重建索引。
+
+Sample configuration of a full-index node shows how you might combine the preceding options, with a fully indexed node, running as an API backend for a bitcoin application.</br>
+下面的例子说明了如何将上述选项与一个全索引节点组合起来，为一个比特币应用程序运行一个API后端。
+
+Example 1. Sample configuration of a full-index node</br>
+例1: 全索引节点的例子
+
+```html
+alertnotify=myemailscript.sh "Alert: %s"
+datadir=/lotsofspace/bitcoin
+txindex=1
+```
+
+Sample configuration of a resource-constrained system shows a resource-constrained node running on a smaller server.</br>
+下面例子是一个资源限制型节点，运行在一个小服务器上。
+
+Example 2. Sample configuration of a resource-constrained system
+
+```html
+alertnotify=myemailscript.sh "Alert: %s"
+maxconnections=15
+prune=5000
+dbcache=150
+maxmempool=150
+maxreceivebuffer=2500
+maxsendbuffer=500
+```
+
+Once you’ve edited the configuration file and set the options that best represent your needs, you can test bitcoind with this configuration. Run Bitcoin Core with the option printtoconsole to run in the foreground with output to the console:</br>
+编辑配置文件并设置最符合需求的选项后，可以使用此配置来测试 bitcoind。 
+使用选项printtoconsole运行Bitcoin Core，它在前台运行，有输出到控制台。
+
+```html
+$ bitcoind -printtoconsole
+
+Bitcoin version v0.15.0
+InitParameterInteraction: parameter interaction: -whitelistforcerelay=1 -> setting -whitelistrelay=1
+Assuming ancestors of block 0000000000000000003b9ce759c2a087d52abc4266f8f4ebd6d768b89defa50a have valid signatures.
+Using the 'standard' SHA256 implementation
+Default data directory /home/ubuntu/.bitcoin
+Using data directory /lotsofspace/.bitcoin
+Using config file /home/ubuntu/.bitcoin/bitcoin.conf
+Using at most 125 automatic connections (1048576 file descriptors available)
+Using 16 MiB out of 32/2 requested for signature cache, able to store 524288 elements
+Using 16 MiB out of 32/2 requested for script execution cache, able to store 524288 elements
+Using 2 threads for script verification
+HTTP: creating work queue of depth 16
+No rpcpassword set - using random cookie authentication
+Generated RPC authentication cookie /lotsofspace/.bitcoin/.cookie
+HTTP: starting 4 worker threads
+init message: Verifying wallet(s)...
+Using BerkeleyDB version Berkeley DB 4.8.30: (April  9, 2010)
+Using wallet wallet.dat
+CDBEnv::Open: LogDir=/lotsofspace/.bitcoin/database ErrorFile=/lotsofspace/.bitcoin/db.log
+scheduler thread start
+Cache configuration:
+* Using 250.0MiB for block index database
+* Using 8.0MiB for chain state database
+* Using 1742.0MiB for in-memory UTXO set (plus up to 286.1MiB of unused mempool space)
+init message: Loading block index...
+Opening LevelDB in /lotsofspace/.bitcoin/blocks/index
+Opened LevelDB successfully
+
+[... more startup messages ...]
+```
+
+You can hit Ctrl-C to interrupt the process once you are satisfied that it is loading the correct settings and running as you expect.</br>
+一旦你确认它加载了正确的配置，并按预期运行，就可以按Ctrl-C中断进程。
+
+To run Bitcoin Core in the background as a process, start it with the daemon option, as bitcoind -daemon.</br>
+要在后台作为一个进程来运行Bitcoin Core，用daemon选项启动它：bitcoind -daemon。
+
+To monitor the progress and runtime status of your bitcoin node, use the command bitcoin-cli getblockchaininfo:</br>
+要查看你的比特币节点的进度和运行状态，使用命令：bitcoin-cli getblockchaininfo
+
+```html
+$ bitcoin-cli getblockchaininfo
+{
+  "chain": "main",
+  "blocks": 0,
+  "headers": 83999,
+  "bestblockhash": "000000000019d6689c085ae165831e934ff763ae46a2a6c172b3f1b60a8ce26f",
+  "difficulty": 1,
+  "mediantime": 1231006505,
+  "verificationprogress": 3.783041623201835e-09,
+  "chainwork": "0000000000000000000000000000000000000000000000000000000100010001",
+  "pruned": false,
+  [...]
+}
+```
+
+This shows a node with a blockchain height of 0 blocks and 83999 headers. The node currently fetches the block headers of the best chain and afterward continues to download the full blocks.</br>
+这显示了这个节点，有0个区块，83999个头。
+这个节点当前取了最佳链的头，然后会继续下载全部区块。
+
+Once you are happy with the configuration options you have selected, you should add bitcoin to the startup scripts in your operating system, so that it runs continuously and restarts when the operating system restarts. You will find a number of example startup scripts for various operating systems in bitcoin’s source directory under contrib/init and a README.md file showing which system uses which script.</br>
+一旦你对所选择的配置选项感到满意，应该将bitcoin添加到操作系统中的启动脚本中，以使其连续运行，并在操作系统重新启动时自动启动。
+contrib/init下的bitcoin的源目录中有各种操作系统的启动脚本例子，README.md文件说明了哪个系统使用哪个脚本。
+
+
+
+
+
+
+
 
