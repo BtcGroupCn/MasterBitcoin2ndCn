@@ -580,6 +580,156 @@ The result is a block hash, which is described in more detail in the following c
 In the next sections we will demonstrate some very useful RPC commands and their expected output.</br>
 在下一节，我们要说明一些非常有用的RPC命令及其预期输出。
 
+### 3.3.1 获得Bitcoin Core客户端状态的信息
+Bitcoin Core provides status reports on diffent modules through the JSON-RPC interface. The most important commands include getblockchaininfo, getmempoolinfo, getnetworkinfo and getwalletinfo.</br>
+Bitcoin Core提通过JSON-RPC接口提供了不同模块的状态报告。</br>
+最重要的命令包括：</br>
+-	getblockchaininfo</br>
+-	getmempoolinfo</br>
+-	getnetworkinfo</br>
+-	getwalletinfo
+
+Bitcoin’s getblockchaininfo RPC command was introduced earlier. The getnetworkinfo command displays basic information about the status of the bitcoin network node. Use bitcoin-cli to run it:</br>
+getblockchaininfo前面介绍了，它显示这个比特币网络节点的状态的基本信息。
+
+```html
+$ bitcoin-cli getnetworkinfo
+  "version": 150000,
+  "subversion": "/Satoshi:0.15.0/",
+  "protocolversion": 70015,
+  "localservices": "000000000000000d",
+  "localrelay": true,
+  "timeoffset": 0,
+  "networkactive": true,
+  "connections": 8,
+  "networks": [
+    ...
+    detailed information about all networks (ipv4, ipv6 or onion)
+    ...
+  ],
+  "relayfee": 0.00001000,
+  "incrementalfee": 0.00001000,
+  "localaddresses": [
+  ],
+  "warnings": ""
+}
+```
+
+The data is returned in JavaScript Object Notation (JSON), a format that can easily be "consumed" by all programming languages but is also quite human-readable. Among this data we see the version numbers for the bitcoin software client (150000) and bitcoin protocol (70015). We see the current number of connections (8) and various information about the bitcoin network and the settings related to this client.</br>
+这个数据是用JSON返回的，JSON是一种格式，可以很容易被所有编程语言使用，但也是可读的。
+在这个数据中，有比特币软件客户端版本号（150000）和比特币协议版本号（70015）。
+当前连接数（8），以及比特币网络和与客户端设置相关的各种信息。
+
+Tip：It will take some time, perhaps more than a day, for the bitcoind client to "catch up" to the current blockchain height as it downloads blocks from other bitcoin clients. You can check its progress using getblockchaininfo to see the number of known blocks.</br>
+提示：比特币特客户端可能要花几天时间才能获取到最新的区块链高度，因为它要从其它比特币客户端下载区块。你可以使用getblockchaininfo查看已知的区块的数量。
+
+### 3.3.2 查看和解码交易
+Commands: getrawtransaction, decoderawtransaction</br>
+命令：</br>
+-	getrawtransaction</br>
+-	decodeawtransaction
+
+In [cup_of_coffee], Alice bought a cup of coffee from Bob’s Cafe. Her transaction was recorded on the blockchain with transaction ID (txid) 0627052b6f28912f2703066a912ea577f2ce4da4caa5a5fbd8a57286c345c2f2. Let’s use the API to retrieve and examine that transaction by passing the transaction ID as a parameter:</br>
+Alice在Bob的咖啡店买了一杯咖啡，她的交易记录在区块链中，交易ID（txid）是：0627052b6f28912f2703066a912ea577f2ce4da4caa5a5fbd8a57286c345c2f2 
+我们使用这个API来查看这个交易，提供的参数是这个交易ID。
+
+```html
+$ bitcoin-cli getrawtransaction 0627052b6f28912f2703066a912ea577f2ce4da4caa5a5fbd8a57286c345c2f2
+
+0100000001186f9f998a5aa6f048e51dd8419a14d8a0f1a8a2836dd734d2804fe65fa35779000↵
+000008b483045022100884d142d86652a3f47ba4746ec719bbfbd040a570b1deccbb6498c75c4↵
+ae24cb02204b9f039ff08df09cbe9f6addac960298cad530a863ea8f53982c09db8f6e3813014↵
+10484ecc0d46f1918b30928fa0e4ed99f16a0fb4fde0735e7ade8416ab9fe423cc54123363767↵
+89d172787ec3457eee41c04f4938de5cc17b4a10fa336a8d752adfffffffff0260e3160000000↵
+0001976a914ab68025513c3dbd2f7b92a94e0581f5d50f654e788acd0ef8000000000001976a9↵
+147f9b1a7fb68d60c536c2fd8aeaa53a8f3cc025a888ac00000000
+```
+
+Tip：A transaction ID is not authoritative until a transaction has been confirmed. Absence of a transaction hash in the blockchain does not mean the transaction was not processed. This is known as "transaction malleability," because transaction hashes can be modified prior to confirmation in a block. After confirmation, the txid is immutable and authoritative.</br>
+提示：在交易被确认之前，交易ID不具有权威性。
+一个交易哈希不在区块链中并不意味着这个交易未被处理。
+这被称为“交易可塑性（malleability）”，因为在区块确认之前可能修改交易哈希。
+确认后，txid就是不可改变的，具有权威性。
+
+The command getrawtransaction returns a serialized transaction in hexadecimal notation. To decode that, we use the decoderawtransaction command, passing the hex data as a parameter. You can copy the hex returned by getrawtransaction and paste it as a parameter to decoderawtransaction:</br>
+命令getrawtransaction以十六进制数据返回一个序列化的交易。
+为了解码，我们使用decodeawtransaction命令，提供的参数是十六进制数据。 
+你可以复制getrawtransaction返回的十六进制数据，并将其作为参数粘贴到decodeawtransaction中。
+
+```html
+$ bitcoin-cli decoderawtransaction 0100000001186f9f998a5aa6f048e51dd8419a14d8↵
+a0f1a8a2836dd734d2804fe65fa35779000000008b483045022100884d142d86652a3f47ba474↵
+6ec719bbfbd040a570b1deccbb6498c75c4ae24cb02204b9f039ff08df09cbe9f6addac960298↵
+cad530a863ea8f53982c09db8f6e381301410484ecc0d46f1918b30928fa0e4ed99f16a0fb4fd↵
+e0735e7ade8416ab9fe423cc5412336376789d172787ec3457eee41c04f4938de5cc17b4a10fa↵
+336a8d752adfffffffff0260e31600000000001976a914ab68025513c3dbd2f7b92a94e0581f5↵
+d50f654e788acd0ef8000000000001976a9147f9b1a7fb68d60c536c2fd8aeaa53a8f3cc025a8↵
+88ac00000000
+
+{
+  "txid": "0627052b6f28912f2703066a912ea577f2ce4da4caa5a5fbd8a57286c345c2f2",
+  "size": 258,
+  "version": 1,
+  "locktime": 0,
+  "vin": [
+    {
+      "txid": "7957a35fe64f80d234d76d83a2...8149a41d81de548f0a65a8a999f6f18",
+      "vout": 0,
+      "scriptSig": {
+        "asm":"3045022100884d142d86652a3f47ba4746ec719bbfbd040a570b1decc...",
+        "hex":"483045022100884d142d86652a3f47ba4746ec719bbfbd040a570b1de..."
+      },
+      "sequence": 4294967295
+    }
+  ],
+  "vout": [
+    {
+      "value": 0.01500000,
+      "n": 0,
+      "scriptPubKey": {
+        "asm": "OP_DUP OP_HASH160 ab68...5f654e7 OP_EQUALVERIFY OP_CHECKSIG",
+        "hex": "76a914ab68025513c3dbd2f7b92a94e0581f5d50f654e788ac",
+        "reqSigs": 1,
+        "type": "pubkeyhash",
+        "addresses": [
+          "1GdK9UzpHBzqzX2A9JFP3Di4weBwqgmoQA"
+        ]
+      }
+    },
+    {
+      "value": 0.08450000,
+      "n": 1,
+      "scriptPubKey": {
+        "asm": "OP_DUP OP_HASH160 7f9b1a...025a8 OP_EQUALVERIFY OP_CHECKSIG",
+        "hex": "76a9147f9b1a7fb68d60c536c2fd8aeaa53a8f3cc025a888ac",
+        "reqSigs": 1,
+        "type": "pubkeyhash",
+        "addresses": [
+          "1Cdid9KFAaatwczBwBttQcwXYCpvK8h7FK"
+        ]
+      }
+    }
+  ]
+}
+```
+
+The transaction decode shows all the components of this transaction, including the transaction inputs and outputs. In this case we see that the transaction that credited our new address with 15 millibits used one input and generated two outputs. The input to this transaction was the output from a previously confirmed transaction (shown as the vin txid starting with 7957a35fe). The two outputs correspond to the 15 millibit credit and an output with change back to the sender.</br>
+这个交易解码显示了这个交易的所有成分，包括交易的输入和输出。
+在这个例子中，可以看到这个交易有一个输入、两个输出。
+这个交易的输入是前一个已确认交易的输出，例子中是vin txid 7957a35fe…..
+
+We can further explore the blockchain by examining the previous transaction referenced by its txid in this transaction using the same commands (e.g., getrawtransaction). Jumping from transaction to transaction we can follow a chain of transactions back as the coins are transmitted from owner address to owner address.</br>
+我们可以进一步探索这个区块链，使用相同的命令（例如 gettransaction ）进一步查看前一个交易（使用它的txid）。
+这样，我们可以可以追溯一连串交易，比特币在所有者地址之间转移。
+
+
+
+
+```html
+```html
+
+
+
 
 
 
