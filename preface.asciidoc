@@ -57,9 +57,9 @@ _++Constant width italic++_:: Shows text that should be replaced with user-suppl
 
 _++等宽斜体++_:: 显示需要由用户提供的或根据上下文环境修改的值。
 
-[TIP提示]
+[TIP]
 =========
-This icon signifies a tip or suggestion. 表示提示或建议
+This icon signifies a tip or suggestion. 
 =========
 
 [NOTE说明]
