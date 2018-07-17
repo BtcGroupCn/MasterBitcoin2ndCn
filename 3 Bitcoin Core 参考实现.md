@@ -21,3 +21,56 @@ Bitcoin Core architecture (Source: Eric Lombrozo) shows the architecture of Bitc
 
 ![](https://github.com/BtcGroupCn/MasterBitcoin2ndCn/blob/master/images/mbc2_0301.png)</br>
 **Figure 1. Bitcoin Core architecture (Source: Eric Lombrozo)**
+
+## 3.1 比特币开发环境
+If you’re a developer, you will want to set up a development environment with all the tools, libraries, and support software for writing bitcoin applications. In this highly technical chapter, we’ll walk through that process step-by-step. If the material becomes too dense (and you’re not actually setting up a development environment) feel free to skip to the next chapter, which is less technical.</br>
+如果你是开发人员，你要设置一个开发环境，有所有工具、库和支持软件，以便编写比特币应用程序。 
+本章涉及的技术细节较多，我们将逐步介绍这个过程。
+如果你觉得过于繁琐（并且你实际上并不打算设置开发环境），可以跳到下一章，下一章的技术会浅显一些。
+
+## 3.2 从源码编译Bitcoin Core
+Bitcoin Core’s source code can be downloaded as a archive or by cloning the authoritative source repository from GitHub. On the Bitcoin Core download page, select the most recent version and download the compressed archive of the source code, e.g., bitcoin-0.15.0.2.tar.gz. Alternatively, use the git command line to create a local copy of the source code from the GitHub bitcoin page.</br>
+Bitcoin Core的源代码可以下载为压缩文件，也可以从GitHub克隆权威的源码库。</br>
+- 在Bitcoin Core下载页，选择最近的版本，下载源码的压缩文件，例如bitcoin-0.15.0.2.tar.gz。</br>
+https://bitcoincore.org/bin/
+-	使用git命令从GitHub bitcoin页面下载源码。</br>
+https://github.com/bitcoin/bitcoin
+
+Tip：In many of the examples in this chapter we will be using the operating system’s command-line interface (also known as a "shell"), accessed via a "terminal" application. The shell will display a prompt; you type a command; and the shell responds with some text and a new prompt for your next command. The prompt may look different on your system, but in the following examples it is denoted by a $ symbol. In the examples, when you see text after a $ symbol, don’t type the $ symbol but type the command immediately following it, then press Enter to execute the command. In the examples, the lines below each command are the operating system’s responses to that command. When you see the next $ prefix, you’ll know it’s a new command and you should repeat the process.</br>
+提示：在本章的许多例子中，我们使用操作系统的命令行界面（shell），通过terminal应用程序访问。 shell提示你输入命令，并且输出一些文本和一个新的提示，你输入下一个命令。
+提示符可能与你的系统上看起来不同，在以下示例中，用$符号表示。
+在示例中，不要输入$，而是输入它之后的命令。然后按回车键执行。
+在示例中，每个命令下面的行是操作系统对该命令的响应。
+当你看到下一个$时，可以输入新的命令，可以一直重复这个过程。
+
+In this example, we are using the git command to create a local copy ("clone") of the source code:</br>
+在本例中，我们用git命令把源代码clone到本地。
+
+```html
+$ git clone https://github.com/bitcoin/bitcoin.git
+Cloning into 'bitcoin'...
+remote: Counting objects: 102071, done.
+remote: Compressing objects: 100% (10/10), done.
+Receiving objects: 100% (102071/102071), 86.38 MiB | 730.00 KiB/s, done.
+remote: Total 102071 (delta 4), reused 5 (delta 1), pack-reused 102060
+Resolving deltas: 100% (76168/76168), done.
+Checking connectivity... done.
+$
+```
+
+Tip：Git is the most widely used distributed version control system, an essential part of any software developer’s toolkit. You may need to install the git command, or a graphical user interface for git, on your operating system if you do not have it already.
+提示：Git是最广泛使用的分布式版本控制系统，是软件开发人员工具包的重要组成部分。
+你可能需要在操作系统上安装git命令或图形用户界面。
+
+When the git cloning operation has completed, you will have a complete local copy of the source code repository in the directory bitcoin. Change to this directory by typing **cd bitcoin** at the prompt:
+当git克隆操作完成后，将在bitcoin目录中有完整的源代码。 
+输入下面命令进入为此目录。
+
+```html
+$ cd bitcoin
+```
+
+
+
+
+
