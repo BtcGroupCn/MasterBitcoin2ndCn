@@ -1,19 +1,27 @@
 [preface]
-== Preface
+== Preface 前言
 
-=== Writing the Bitcoin Book
+=== Writing the Bitcoin Book 关于本书的写作
 
 ((("bitcoin", "benefits of", id="BCbasicbenefits0")))((("decentralized systems", "bitcoin as")))I first stumbled upon bitcoin in mid-2011. My immediate reaction was more or less "Pfft! Nerd money!" and I ignored it for another six months, failing to grasp its importance. This is a reaction that I have seen repeated among many of the smartest people I know, which gives me some consolation. The second time I came across bitcoin, in a mailing list discussion, I decided to read the whitepaper written by Satoshi Nakamoto to study the authoritative source and see what it was all about. ((("digital currencies", "bitcoin vs. others")))I still remember the moment I finished reading those nine pages, when I realized that bitcoin was not simply a digital currency, but a network of trust that could also provide the basis for so much more than just currencies. The realization that "this isn't money, it's a decentralized trust network," started me on a four-month journey to devour every scrap of information about bitcoin I could find. I became obsessed and enthralled, spending 12 or more hours each day glued to a screen, reading, writing, coding, and learning as much as I could. I emerged from this state of fugue, more than 20 pounds lighter from lack of consistent meals, determined to dedicate myself to working on bitcoin.
 
+我第一次偶遇比特币是在2011年年中，当时的反应大概是“哈！书呆子的钱嘛！”因为没能领会它的重要性，我忽视它长达六个月之久，而让我稍感宽慰的是，许多我认识的一些聪明绝顶人也是这种反应。在一次邮件列表讨论时，我再次接触到了比特币，于是决定阅读中本聪（Satoshi Nakamoto）写的白皮书，研究比特币的权威解释，看看到底是怎么一回事。我仍记得刚刚读完那九页内容的那一刻，那时我才终于明白了：比特币不单单是一种数字货币，还是一种给货币及其他很多东西提供基础的信任网络。对“不是货币，而是去中心化信任网络”的领悟，让我开启了为期四个月的比特币沉醉之旅。我如饥似渴地寻找任何关于比特币的点滴信息，变得越来越着迷，每天都花上12 个小时以上紧盯屏幕，竭尽所能地不断阅读、写作、学习和编程。从这段着魔的状态中走出来的时候，我的体重由于前期没有规律饮食轻了20 多磅，同时我也坚定了要全心投入比特币事业的决心。
+
 Two years later, after creating a number of small startups to explore various bitcoin-related services and products, I decided that it was time to write my first book. Bitcoin was the topic that had driven me into a frenzy of creativity and consumed my thoughts; it was the most exciting technology I had encountered since the internet. It was now time to share my passion about this amazing technology with a broader audience.
 
-=== Intended Audience
+随后的两年，我创立了一系列开发比特币相关服务和产品的公司，之后我决定写我的第一本书。书的主题就是激发了我疯狂的创造力并让我冥思苦想的比特币，它是我在继互联网之后遇到的最为振奋人心的技术。现在是时候跟更广大的读者分享我对这项惊人技术的热情了。
+
+=== Intended Audience 目标读者
 
 ((("intended audience")))This book is mostly intended for coders. If you can use a programming language, this book will teach you how cryptographic currencies work, how to use them, and how to develop software that works with them. The first few chapters are also suitable as an in-depth introduction to bitcoin for noncoders—those trying to understand the inner workings of bitcoin and cryptocurrencies.
 
-=== Why Are There Bugs on the Cover?
+本书主要面向程序员。如果你能使用一门编程语言，本书将会告诉你加密货币的原理、使用方法，以及如何开发与之相关的软件。对希望理解比特币及加密货币内在工作机制的非程序员读者们，本书前几章作为对比特币的深入介绍依然适用。
+
+=== Why Are There Bugs on the Cover? 封面故事
 
 ((("decentralized systems", "in nature")))The leafcutter ant is a species that exhibits highly complex behavior in a colony super-organism, but each individual ant operates on a set of simple rules driven by social interaction and the exchange of chemical scents (pheromones). Per Wikipedia: "Next to humans, leafcutter ants form the largest and most complex animal societies on Earth." Leafcutter ants don't actually eat leaves, but rather use them to farm a fungus, which is the central food source for the colony. Get that? These ants are farming!
+
+在群居生物物种中，切叶蚁表现出了高度复杂行为的物种特征。但是，群落中的每一只蚂蚁个体仅仅遵循一些社会互动和化学气味（即信息素）交换的简单规则。维基百科提到：“切叶蚁形成地球上仅次于人类的最为庞大且复杂的动物社会。”实际上，切叶蚁不吃叶子，而是使用叶子制造一种真菌来充当蚁群主要食物来源。意识到了吗？它们在耕作！
 
 Although ants form a caste-based society and have a queen for producing offspring, there is no central authority or leader in an ant colony. The highly intelligent and sophisticated behavior exhibited by a multimillion-member colony is an emergent property from the interaction of the individuals in a social network.
 
