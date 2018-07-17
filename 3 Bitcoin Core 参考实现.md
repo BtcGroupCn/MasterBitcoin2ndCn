@@ -277,4 +277,45 @@ $ which bitcoin-cli
 /usr/local/bin/bitcoin-cli
 ```
 
+### 3.2.4 运行一个Bitcoin Core节点
+Bitcoin’s peer-to-peer network is composed of network "nodes," run mostly by volunteers and some of the businesses that build bitcoin applications. Those running bitcoin nodes have a direct and authoritative view of the bitcoin blockchain, with a local copy of all the transactions, independently validated by their own system. By running a node, you don’t have to rely on any third party to validate a transaction. Moreover, by running a bitcoin node you contribute to the bitcoin network by making it more robust.</br>
+比特币的P2P网络由网络“节点”组成，主要由志愿者和一些构建比特币应用程序的商业机构运行。
+那些运行的比特币节点有一个直接和权威的比特币区块链视图，并且有所有交易，由各自的系统独立验证。
+通过运行一个节点，你不必依赖任何第三方来验证一个交易。
+此外，通过运行一个比特币节点，你为比特币网络做了贡献：使之更加健壮。
+
+Running a node, however, requires a permanently connected system with enough resources to process all bitcoin transactions. Depending on whether you choose to index all transactions and keep a full copy of the blockchain, you may also need a lot of disk space and RAM. As of early 2018, a full-index node needs 2 GB of RAM and a minimum of 160 GB of disk space (see https://blockchain.info/charts/blocks-size). Bitcoin nodes also transmit and receive bitcoin transactions and blocks, consuming internet bandwidth. If your internet connection is limited, has a low data cap, or is metered (charged by the gigabit), you should probably not run a bitcoin node on it, or run it in a way that constrains its bandwidth (see Sample configuration of a resource-constrained system).</br>
+但是，运行一个节点需要一个具有足够资源来处理所有比特币交易的永久连接的系统。 
+根据你是否选择索引所有交易并保留完整区块链，你可能还需要大量的磁盘空间和RAM。
+到2018年初，一个全索引节点需要2GB RAM和160 GB磁盘空间。 
+参见：https://blockchain.info/charts/blocks-size
+比特币节点还传输和接收比特币交易和区块，消耗互联网带宽。
+如果你的互联网连接受限，有带宽上限或按流量计费，建议你不要在其上运行比特币全节点，或以限制其带宽的方式运行它（请参阅资源有限的系统）。
+
+Tip：Bitcoin Core keeps a full copy of the blockchain by default, with every transaction that has ever occurred on the bitcoin network since its inception in 2009. This dataset is dozens of gigabytes in size and is downloaded incrementally over several days or weeks, depending on the speed of your CPU and internet connection. Bitcoin Core will not be able to process transactions or update account balances until the full blockchain dataset is downloaded. Make sure you have enough disk space, bandwidth, and time to complete the initial synchronization. You can configure Bitcoin Core to reduce the size of the blockchain by discarding old blocks (see Sample configuration of a resource-constrained system), but it will still download the entire dataset before discarding data.</br>
+提示：Bitcoin Core默认情况下保留完整区块链，从2009年以来在比特币网络上发生的每一笔交易。
+此数据集的大小为160GB，下载可能需要几天或几周，具体取决于 CPU和互联网连接的速度。
+在完整的区块链数据集被下载完成之前，Bitcoin Core无法处理交易或更新帐户余额。 
+确保你有足够的磁盘空间、带宽和时间来完成初始同步。
+你可以配置Bitcoin Core来减少区块链大小，方法是：丢弃旧的区块（参阅资源有限的系统）。但是在丢弃数据之前，仍要下载整个数据集。
+
+Despite these resource requirements, thousands of volunteers run bitcoin nodes. Some are running on systems as simple as a Raspberry Pi (a $35 USD computer the size of a pack of cards). Many volunteers also run bitcoin nodes on rented servers, usually some variant of Linux. A Virtual Private Server (VPS) or Cloud Computing Server instance can be used to run a bitcoin node. Such servers can be rented for $25 to $50 USD per month from a variety of providers.</br>
+尽管有这些资源需求，但仍有成千上万的志愿者运行比特币节点。 
+一些运行在简单的系统上。 许多志愿者也在租用的服务器上运行比特币节点，这些服务器通常是Linux系统。
+“虚拟私有服务器（VPS）”或“云计算服务器”可用于运行比特币节点。这些服务器可以从各种供应商那里租，每月25至50美元。
+
+Why would you want to run a node? Here are some of the most common reasons:</br>
+-	If you are developing bitcoin software and need to rely on a bitcoin node for programmable (API) access to the network and blockchain.</br>
+-	If you are building applications that must validate transactions according to bitcoin’s consensus rules. Typically, bitcoin software companies run several nodes.</br>
+-	If you want to support bitcoin. Running a node makes the network more robust and able to serve more wallets, more users, and more transactions.</br>
+-	If you do not want to rely on any third party to process or validate your transactions.</br>
+为什么要运行一个节点？
+以下是一些最常见的原因：</br>
+-	你在开发比特币软件，并且需要依赖比特币节点来编程（API）访问网络和区块链。</br>
+- 你正在构建应用程序，它必须根据比特币共识规则验证交易。一般来说，比特币软件公司通常运行几个节点。</br>
+-	你想支持比特币。运行节点使网络更加健壮，能够服务更多的钱包、更多的用户和更多的交易。</br>
+-	你不想依赖任何第三方来处理或验证你的交易。
+
+If you’re reading this book and interested in developing bitcoin software, you should be running your own node.</br>
+如果你正在阅读本书，并对开发比特币软件感兴趣，那么你应该运行自己的节点。
 
