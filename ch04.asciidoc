@@ -90,37 +90,79 @@ When spending bitcoin, the current bitcoin owner presents her public key and a s
 
 ((("keys and addresses", "overview of", "private and public key pairs")))((("elliptic curve cryptography")))((("cryptography", "elliptic curve cryptography")))A bitcoin wallet contains a collection of key pairs, each consisting of a private key and a public key. The private key (k) is a number, usually picked at random. From the private key, we use elliptic curve multiplication, a one-way cryptographic function, to generate a public key (K). From the public key (K), we use a one-way cryptographic hash function to generate a bitcoin address (A). In this section, we will start with generating the private key, look at the elliptic curve math that is used to turn that into a public key, and finally, generate a bitcoin address from the public key. The relationship between private key, public key, and bitcoin address is shown in <<k_to_K_to_A>>.
 
+比特币钱包中包含一些密钥对，每个密钥对有一个私钥和一个公钥。
+私钥（k）是一个数字，通常是随机选择的数字。
+有了私钥，就可以使用椭圆曲线乘法来生成公钥（K），椭圆曲线乘法是一个单向加密函数。
+有了公钥（K），再使用一个单向加密哈希函数生成比特币地址（A）。
+本节从生成私钥开始，讲述椭圆曲线运算如何用私钥生成公钥，最后在用公钥生成比特币地址。
+下图显示了私钥、公钥、比特币地址之间的关系。
+
 [[k_to_K_to_A]]
 .Private key, public key, and bitcoin address
 image::images/mbc2_0401.png["privk_to_pubK_to_addressA"]
 
-.Why Use Asymmetric Cryptography (Public/Private Keys)?
+**Why Use Asymmetric Cryptography (Public/Private Keys)? **
 ****
 ((("cryptography", "asymmetric")))((("digital signatures", "asymmetric cryptography and")))((("asymmetric cryptography")))Why is asymmetric cryptography used in bitcoin? It's not used to "encrypt" (make secret) the transactions. Rather, the useful property of asymmetric cryptography is the ability to generate _digital signatures_. A private key can be applied to the digital fingerprint of a transaction to produce a numerical signature. This signature can only be produced by someone with knowledge of the private key. However, anyone with access to the public key and the transaction fingerprint can use them to _verify_ the signature. This useful property of asymmetric cryptography makes it possible for anyone to verify every signature on every transaction, while ensuring that only the owners of private keys can produce valid signatures.
 ****
 
+**为什么使用非对称密码学（公钥/私钥）？**
+
+为什么在比特币中使用非对称密码学？ 
+非对称密码学不是用于对交易进行“加密”（使交易成为秘密）。
+非对称密码学的有用特性是能够生成数字签名。可以对交易的数字指纹应用一个私钥，从而生成一个数字签名。这个签名只能由知道私钥的人生成。但是，任何知道公钥和交易指纹的人都可以使用它们来验证这个签名。
+这个特性使得每个人都可以验证每笔交易的每个签名，同时保证：只有私钥的所有者能生成有效的签名。
+
+
 [[private_keys]]
-==== Private Keys
+==== 4.1.3 Private Keys 私钥
 
 ((("keys and addresses", "overview of", "private key generation")))((("warnings and cautions", "private key protection")))A private key is simply a number, picked at random. Ownership and control over the private key is the root of user control over all funds associated with the corresponding bitcoin address. The private key is used to create signatures that are required to spend bitcoin by proving ownership of funds used in a transaction. The private key must remain secret at all times, because revealing it to third parties is equivalent to giving them control over the bitcoin secured by that key. The private key must also be backed up and protected from accidental loss, because if it's lost it cannot be recovered and the funds secured by it are forever lost, too.
+
+私钥只是随机选出的一个数字。
+对私钥的所有权和控制，是对相应比特币地址关联的资金的控制的根本。
+在花费比特币时，私钥用于创建签名，以证明对资金的所有权。
+私钥必须始终保密，因为一旦被泄露，别人就能用它控制你的比特币了。
+私钥还必须进行备份，以防意外丢失，因为一旦丢失，就无法复原，你的比特币也就丢了。
 
 [TIP]
 ====
 The bitcoin private key is just a number. You can pick your private keys randomly using just a coin, pencil, and paper: toss a coin 256 times and you have the binary digits of a random private key you can use in a bitcoin wallet. The public key can then be generated from the private key.
 ====
 
-===== Generating a private key from a random number
+提示：比特币私钥只是一个数字。
+你可以用硬币、铅笔和纸来随机选择你的私钥：掷硬币256次，正面为1，反面为0，用笔和纸记录袭来，你就得到了一个私钥，可以在比特币钱包中使用。
+然后，用这个私钥可以生成对应的公钥。
+
+===== Generating a private key from a random number 从一个随机数生成一个私钥
 
 The first and most important step in generating keys is to find a secure source of entropy, or randomness. Creating a bitcoin key is essentially the same as "Pick a number between 1 and 2^256^." The exact method you use to pick that number does not matter as long as it is not predictable or repeatable. Bitcoin software uses the underlying operating system's random number generators to produce 256 bits of entropy (randomness). Usually, the OS random number generator is initialized by a human source of randomness, which is why you may be asked to wiggle your mouse around for a few seconds.
 
+第一步也是最重要的一步，是找到一个安全的随机源（熵，平均信息量）。
+创建一个比特币密钥实际上等同于：在1 到2256之间选一个数字。
+选择数字的方法并不重要，只要它不是可预测的或重复的。
+比特币软件使用操作系统底层的随机数生成器来产生256位的随机数。
+通常情况下，操作系统随机数生成器由一个人工随机源来进行初始化，这就是为什么你会被要求晃动鼠标几秒钟。
+
 More precisely, the private key can be any number between +0+ and +n - 1+ inclusive, where n is a constant (n = 1.1578 * 10^77^, slightly less than 2^256^) defined as the order of the elliptic curve used in bitcoin (see <<elliptic_curve>>). To create such a key, we randomly pick a 256-bit number and check that it is less than +n+. In programming terms, this is usually achieved by feeding a larger string of random bits, collected from a cryptographically secure source of randomness, into the SHA256 hash algorithm, which will conveniently produce a 256-bit number. If the result is less than +n+, we have a suitable private key. Otherwise, we simply try again with another random number.
+
+更准确地说，私钥可以是1和n-1之间的任何数字，n是一个常数（n=1.158 * 1077，略小于2256），被定义为由比特币所使用的椭圆曲线的阶。
+为了生成这样一个私钥，我们随机选择一个256位的数字，并确认它是小于n。
+在编程中，一般是这样实现的：输入一个很长的字符串（随机比特），它来自一个随机加密安全源，使用SHA256哈希算法将其转换为一个256位数字。如果运算结果小于n，我们就得到了一个私钥。否则，就用另一个随机数再试一次。
 
 [WARNING]
 ====
 ((("random numbers", "random number generation")))((("entropy", "random number generation")))Do not write your own code to create a random number or use a "simple" random number generator offered by your programming language. Use a cryptographically secure pseudorandom number generator (CSPRNG) with a seed from a source of sufficient entropy. Study the documentation of the random number generator library you choose to make sure it is cryptographically secure. Correct implementation of the CSPRNG is critical to the security of the keys.
 ====
 
+警告：不要自己写代码来生成随机数，或使用编程语言提供的简单随机数生成器来获得随机数。
+使用加密安全伪随机数生成器（CSPRNG），并用来自一个足够随机源的一个种子。
+研究一下你所选择的随机数生成器库的文档，确保它是加密安全的。
+CSPRNG的正确实现对于密钥的安全至关重要。
+
 The following is a randomly generated private key (k) shown in hexadecimal format (256 bits shown as 64 hexadecimal digits, each 4 bits):
+
+下面是一个随机生成的私钥（k），显示的是十六进制格式（256位表示为64个十六进制数字）。
 
 ----
 1E99423A4ED27608A15A2616A2B0E9E52CED330AC530EDCC32C8FFC6A526AEDD
@@ -132,7 +174,16 @@ The following is a randomly generated private key (k) shown in hexadecimal forma
 The size of bitcoin's private key space, (2^256^) is an unfathomably large number. It is approximately 10^77^ in decimal. For comparison, the visible universe is estimated to contain 10^80^ atoms.
 ====
 
+提示：比特币私钥空间的大小是2^256^，这是一个非常非常大的数字。
+十进制表示大约是10^77^，而据估计，可见宇宙只含有10^80^个原子。
+
 ((("dumpprivkey command")))To generate a new key with the Bitcoin Core client (see <<ch03_bitcoin_client>>), use the +getnewaddress+ command. For security reasons it displays the public key only, not the private key. To ask +bitcoind+ to expose the private key, use the +dumpprivkey+ command. The +dumpprivkey+ command shows the private key in a Base58 checksum-encoded format called the _Wallet Import Format_ (WIF), which we will examine in more detail in <<priv_formats>>. Here's an example of generating and displaying a private key using these two commands:
+
+为了用Bitcoin Core客户端生成一个新的密钥，使用 getnewaddress 命令。
+出于安全考虑，这个命令显示公钥，而不显示私钥。
+如果让bitcoind显示私钥，使用 dumpprivkey 命令。
+dumpprivkey 命令会把私钥显示为 Base58校验和编码格式，这种格式称为钱包导入格式（WIF）。
+下面是使用这两个命令的例子。
 
 ----
 $ bitcoin-cli getnewaddress
@@ -143,13 +194,22 @@ KxFC1jmwwCoACiCAWZ3eXa96mBM6tb3TYzGmf6YwgdGWZgawvrtJ
 
 The +dumpprivkey+ command opens the wallet and extracts the private key that was generated by the +getnewaddress+ command. It is not possible for +bitcoind+ to know the private key from the public key unless they are both stored in the wallet.
 
+dumpprivkey 命令打开钱包，提取由 getnewaddress 命令生成的私钥。
+除非公钥和私钥都保存在钱包中，否则bitcoind不可能知道这个私钥。
+
 [TIP]
 =====================================================================
 The +dumpprivkey+ command does not generate a private key from a public key, as this is impossible. The command simply reveals the private key that is already known to the wallet and which was generated by the +getnewaddress+ command.
 =====================================================================
 
+提示：dumpprivkey命令不能从公钥得到对应的私钥，因为这是不可能的。
+这个命令只是显示钱包中已有的私钥，即由getnewaddress命令生成的私钥。
+
 [role="pagebreak-before"]
 You can also use the Bitcoin Explorer command-line tool (see <<appdx_bx>>) to generate and display private keys with the commands +seed+, +ec-new+, and +ec-to-wif+:
+
+你还可以使用Bitcoin Explorer命令行工具（参见附录中的[appdx_bx]），
+使用命令seed、ec-new、ec-to-wif生成和显示私钥。
 
 ----
 $ bx seed | bx ec-new | bx ec-to-wif
@@ -157,21 +217,35 @@ $ bx seed | bx ec-new | bx ec-to-wif
 ----
 
 [[pubkey]]
-==== Public Keys
+==== 4.1.4 Public Keys 公钥
 
 ((("keys and addresses", "overview of", "public key calculation")))((("generator point")))The public key is calculated from the private key using elliptic curve multiplication, which is irreversible: _K_ = _k_ * _G_, where _k_ is the private key, _G_ is a constant point called the _generator point_, and _K_ is the resulting public key. The reverse operation, known as "finding the discrete logarithm"—calculating _k_ if you know __K__—is as difficult as trying all possible values of _k_, i.e., a brute-force search. Before we demonstrate how to generate a public key from a private key, let's look at elliptic curve cryptography in a bit more detail.
+
+使用椭圆曲线乘法，从私钥计算得到公钥，这是不可逆转的过程：K = k*G 
+其中，k是私钥，G是常数点（生成点），K是公钥。
+其反向运算是非常困难的，被称为“寻找离散对数”，需要暴力搜索所有的可能的k值。
+在说明如何从私钥得到公钥之前，我们先稍微看看椭圆曲线密码学的细节。
 
 [TIP]
 ====
 Elliptic curve multiplication is a type of function that cryptographers call a "trap door" function: it is easy to do in one direction (multiplication) and impossible to do in the reverse direction (division). The owner of the private key can easily create the public key and then share it with the world knowing that no one can reverse the function and calculate the private key from the public key. This mathematical trick becomes the basis for unforgeable and secure digital signatures that prove ownership of bitcoin funds.
 ====
 
+提示：椭圆曲线乘法是一种函数，密码学家称之为“陷阱门函数”：在一个方向上（乘法）很容易实现，但反方向上很难实现（除法）。
+私钥的所有者可以很容易得到公钥，然后提供给其他人，但没人能够根据公钥计算出私钥。
+这个数学技巧成为不可伪造和安全的“数字签名”的基础，它能证明比特币资金的所有权。
+
 [[elliptic_curve]]
-==== Elliptic Curve Cryptography Explained
+==== 4.1.5 Elliptic Curve Cryptography Explained 椭圆曲线密码学的解释
 
 ((("keys and addresses", "overview of", "elliptic curve cryptography")))((("elliptic curve cryptography", id="eliptic04")))((("cryptography", "elliptic curve cryptography", id="Celliptic04")))Elliptic curve cryptography is a type of asymmetric or public key cryptography based on the discrete logarithm problem as expressed by addition and multiplication on the points of an elliptic curve.
 
+椭圆曲线密码学是一种非对称或公钥加密法，它基于离散对数问题， 
+可以用对椭圆曲线上的点进行加法或乘法运算来表达。 
+
 <<ecc-curve>> is an example of an elliptic curve, similar to that used by bitcoin.
+
+下图是一个椭圆曲线的例子，类似于比特币所用的椭圆曲线。
 
 [[ecc-curve]]
 [role="smallerthirty"]
@@ -179,6 +253,9 @@ Elliptic curve multiplication is a type of function that cryptographers call a "
 image::images/mbc2_0402.png["ecc-curve"]
 
 Bitcoin uses a specific elliptic curve and set of mathematical constants, as defined in a standard called +secp256k1+, established by the National Institute of Standards and Technology (NIST). The +secp256k1+ curve is defined by the following function, which produces an elliptic curve:
+
+比特币使用了一个特定的椭圆曲线，和一套数学常量，定义在一个标准中（secp256k1），这个标准是由NIST制定的。
+secp256k1曲线是由下面这个函数定义，该函数产生了一个椭圆曲线。
 
 [latexmath]
 ++++
@@ -198,7 +275,15 @@ or
 
 The _mod p_ (modulo prime number p) indicates that this curve is over a finite field of prime order _p_, also written as latexmath:[\( \mathbb{F}_p \)], where p = 2^256^ – 2^32^ – 2^9^ – 2^8^ – 2^7^ – 2^6^ – 2^4^ – 1, a very large prime number.
 
+mod p（对素数p取模）表示，该曲线是在素数p的有限域内，也写作Fp，
+其中p = 2^256^ – 2^32^ – 2^9^ – 2^8^ – 2^7^ – 2^6^ – 2^4^ – 1， 这是个一个非常大的素数。
+
 Because this curve is defined over a finite field of prime order instead of over the real numbers, it looks like a pattern of dots scattered in two dimensions, which makes it difficult to visualize. However, the math is identical to that of an elliptic curve over real numbers. As an example, <<ecc-over-F17-math>> shows the same elliptic curve over a much smaller finite field of prime order 17, showing a pattern of dots on a grid. The +secp256k1+ bitcoin elliptic curve can be thought of as a much more complex pattern of dots on a unfathomably large grid.
+
+因为这个曲线被定义在一个素数的有限域内，而不是定义在实数的范围内，所以，它的函数图像看起来是分散在二维平面上的离散的点，因此很难可视化。
+但是，其中的数学原理与实数范围的椭圆曲线相同。
+举个例子，下图显示的椭圆曲线是在F(p)上，p=17，显示了网格上点的模式。
+secp256k1比特币椭圆曲线可以被想象成一个极大的网格上点的非常复杂的模式。
 
 [[ecc-over-F17-math]]
 [role="smallersixty"]
@@ -206,6 +291,8 @@ Because this curve is defined over a finite field of prime order instead of over
 image::images/mbc2_0403.png["ecc-over-F17-math"]
 
 So, for example, the following is a point P with coordinates (x,y) that is a point on the +secp256k1+ curve:
+
+例如，P的坐标是(x,y)，它是 secp256k1 曲线上的一个点。
 
 ----
 P = (55066263022277343669578718895168534326250603453777594175500187360389116729240, 32670510020758816978083085130507043184471273380659243275938904335757337482424)
