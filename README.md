@@ -30,7 +30,8 @@ https://bitcoinbook.info/
 
 联系方式：</br>
 QQ群：574770647 （区块链源码交流）</br>
-QQ：2957662084
+QQ：2957662084 </br>
+Email：didongke@126.com
 
 ### 小马 
 ### 2018年7月16日
